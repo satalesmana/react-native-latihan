@@ -1,10 +1,27 @@
 import { MyButton, MyTextInput } from "@/components";
+import { useRouter } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function LoginScreen() {
   const [email, onChangeEmail] = React.useState("");
   const [password, onChangePassword] = React.useState("");
+  const router = useRouter();
+
+  const onLoginPress = () => {
+    if(email === "" || password === "") {
+      alert("Please fill in all fields");
+      return;
+    }
+    if(email === "admin@gmail.com" && password === "tes123") {
+      router.replace("/(admin)/home");
+    } else {
+      alert("Invalid email or password");
+      return;
+    }
+  }
+
+
 
   return (
     <ScrollView style={styles.body}>
@@ -36,7 +53,7 @@ export default function LoginScreen() {
           <MyButton
             text="Sign in"
             btnType='Primary'
-            action={() => console.log("Login pressed")}/>
+            action={onLoginPress}/>
 
           <MyButton
             text="Create new account"
