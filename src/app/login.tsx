@@ -1,26 +1,41 @@
-import { MyButton, MyTextInput } from "@/components";
+import { LoadingUi, MyButton, MyTextInput } from "@/components";
 import { useRouter } from "expo-router";
 import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { supabase } from "../../lib/supabase";
 
 export default function LoginScreen() {
   const [email, onChangeEmail] = React.useState("");
   const [password, onChangePassword] = React.useState("");
+  const [loading, setLoading] = React.useState(false)
   const router = useRouter();
 
-  const onLoginPress = () => {
-    if(email === "" || password === "") {
-      alert("Please fill in all fields");
-      return;
-    }
-    if(email === "admin@gmail.com" && password === "tes123") {
+  const onLoginPress = async () => {
+    try{
+      setLoading(true)
+      const normalizedEmail = email.trim()
+
+      if(normalizedEmail.length <1 || password.length < 1) {
+        throw new Error('Please fill in all fields')
+      }
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      })
+
+      if (error) {
+        throw new Error(error.message)
+      }
+
       router.replace("/(admin)/home");
-    } else {
-      alert("Invalid email or password");
-      return;
+    }catch(error:any){
+      console.log('[onLoginPress]',error)
+      Alert.alert('Error', error.message)
+    }finally{
+      setLoading(false)
     }
   }
-
 
 
   return (
@@ -80,6 +95,7 @@ export default function LoginScreen() {
               action={() => console.log("Apple pressed")}/>
           </View>
         </View>
+        <LoadingUi visible={loading}/>
       </View>
     </ScrollView>
   );

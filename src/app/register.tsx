@@ -14,9 +14,14 @@ const RegisterScreen = () => {
   const onSubmitRegister=async()=>{
     try{
       setLoading(true)
+      const normalizedEmail = email.trim()
 
-      if(email.length < 1){
+      if(normalizedEmail.length < 1){
         throw new Error('Email is required')
+      }
+
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)){
+        throw new Error('Please enter a valid email address')
       }
 
       if(password.length < 1){
@@ -28,7 +33,7 @@ const RegisterScreen = () => {
       }
 
       const { data: { session }, error} = await supabase.auth.signUp({
-        email: email,
+        email: normalizedEmail,
         password: password,
       })
 
