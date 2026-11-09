@@ -42,7 +42,7 @@ export default function AdminDompetScreen() {
             const { data, error } = await supabase
                 .from('dompet')
                 .insert([{ 
-                    userid: claims?.sub || 'xxxxxx', 
+                    user_id: claims?.sub || 'xxxxxx', 
                     name:namaDompet.trim(),
                     cardbackground: theme.id,
                     cardcolor: accent.color,
