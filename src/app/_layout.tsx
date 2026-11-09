@@ -7,7 +7,8 @@ export default function RootLayout() {
       <Stack.Screen name="index" options={{headerShown:false}}/>
       <Stack.Screen name="login" options={{headerShown:false}}/>
       <Stack.Screen name="register" options={{headerShown:false}}/>
-      <Stack.Screen name="(admin)/home/index" options={{title:'Home'}} />
+      <Stack.Screen name="(admin)/home/index" options={{title:'Home', headerBackButtonMenuEnabled: true}} />
+      <Stack.Screen name="(admin)/dompet" options={{title:'Dompet'}} />
     </Stack>
   );
 }

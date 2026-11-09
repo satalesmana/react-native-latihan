@@ -1,10 +1,12 @@
 import { JwtPayload } from '@supabase/supabase-js';
+import { useRouter } from "expo-router";
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
 import { supabase } from '../../../../lib/supabase';
 
 export default function AdminHomeScreen() {
     const [claims, setClaims] = useState<JwtPayload | null>(null)
+    const router = useRouter();
 
     useEffect(() => {
         supabase.auth.getClaims().then(({ data: { claims } }) => {
@@ -20,7 +22,10 @@ export default function AdminHomeScreen() {
     return (
         <View>
             <Text>Admin Home Screen</Text>
-            {claims && <Text>{JSON.stringify(claims)}</Text>}
+
+            <Button title="new dompet" onPress={()=> router.push('/(admin)/dompet')} />
+
+            {claims && <Text>{JSON.stringify(claims)}</Text>}    
         </View>
     );
 }
