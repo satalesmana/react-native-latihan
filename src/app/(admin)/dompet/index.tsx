@@ -1,4 +1,4 @@
-import { CardColorPicker, CardDompet, Chip, MyButton, MyTextInput } from '@/components';
+import { CardColorPicker, CardDompet, Chip, LoadingUi, MyButton, MyTextInput } from '@/components';
 import { CARD_ACCENTS, DEFAULT_CARD_ACCENT, DEFAULT_CARD_THEME } from '@/constants/cardThemes';
 import { JwtPayload } from '@supabase/supabase-js';
 import { useRouter } from 'expo-router';
@@ -12,6 +12,7 @@ export default function AdminDompetScreen() {
     const [theme, setTheme] = useState(DEFAULT_CARD_THEME)
     const [accent, setAccent] = useState(DEFAULT_CARD_ACCENT)
     const [claims, setClaims] = useState<JwtPayload | null>(null)
+    const [loading, setLoading] = useState(false)
     
     const router = useRouter()
 
@@ -33,6 +34,7 @@ export default function AdminDompetScreen() {
 
     const onSimpanDompet = async () => {
         try {
+            setLoading(true)
             if (namaDompet.trim().length < 1) {
                 throw new Error('Nama dompet wajib diisi')
             } 
@@ -62,6 +64,8 @@ export default function AdminDompetScreen() {
         }catch (error:any) {
             console.error('Error saat menyimpan dompet:', error);
             Alert.alert('Error', error.message || 'Terjadi kesalahan saat menyimpan dompet');
+        }finally {
+            setLoading(false)
         }
     }
 
@@ -79,7 +83,8 @@ export default function AdminDompetScreen() {
                 theme={theme}
                 accentColor={accent.color}
             />
-
+            <LoadingUi visible={loading}/>
+            
             <View className="mt-6">
                 <Text className="text-[14px] font-semibold text-[#0A0A0A] mb-2">Nama Dompet</Text>
                 <MyTextInput
