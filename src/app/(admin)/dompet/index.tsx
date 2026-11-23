@@ -1,31 +1,20 @@
 import { CardColorPicker, CardDompet, Chip, LoadingUi, MyButton, MyTextInput } from '@/components';
 import { CARD_ACCENTS, DEFAULT_CARD_ACCENT, DEFAULT_CARD_THEME } from '@/constants/cardThemes';
-import { JwtPayload } from '@supabase/supabase-js';
+import { useAppSelector } from '@/store/hooks';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Alert, ScrollView, Text, View } from 'react-native';
 import { supabase } from '../../../../lib/supabase';
 
 export default function AdminDompetScreen() {
+    const { user } = useAppSelector((state) => state.auth)
     const [namaDompet, setNamaDompet] = useState('')
     const [saldoAwal, setSaldoAwal] = useState('')
     const [theme, setTheme] = useState(DEFAULT_CARD_THEME)
     const [accent, setAccent] = useState(DEFAULT_CARD_ACCENT)
-    const [claims, setClaims] = useState<JwtPayload | null>(null)
     const [loading, setLoading] = useState(false)
-    
-    const router = useRouter()
 
-    useEffect(() => {
-        supabase.auth.getClaims().then(({ data: { claims } }) => {
-            setClaims(claims)
-        })
-        supabase.auth.onAuthStateChange(() => {
-            supabase.auth.getClaims().then(({ data: { claims } }) => {
-                setClaims(claims)
-            })
-        })
-    }, [])
+    const router = useRouter()
 
     // ambil angka saja dari input saldo
     const onChangeSaldo = (text: string) => {
@@ -37,16 +26,16 @@ export default function AdminDompetScreen() {
             setLoading(true)
             if (namaDompet.trim().length < 1) {
                 throw new Error('Nama dompet wajib diisi')
-            } 
+            }
 
             const { data, error } = await supabase
                 .from('dompet')
-                .insert([{ 
-                    user_id: claims?.sub || 'xxxxxx', 
+                .insert([{
+                    user_id: user?.id || 'xxxxxx',
                     name:namaDompet.trim(),
                     cardbackground: theme.id,
                     cardcolor: accent.color,
-                    balance: Number(saldoAwal) || 0 
+                    balance: Number(saldoAwal) || 0
                 }
                 ])
                 .select()

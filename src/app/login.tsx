@@ -3,12 +3,15 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { supabase } from "../../lib/supabase";
+import { useAppDispatch } from "../store/hooks";
+import { setAuth } from "../store/slices/authSlice";
 
 export default function LoginScreen() {
   const [email, onChangeEmail] = React.useState("");
   const [password, onChangePassword] = React.useState("");
   const [loading, setLoading] = React.useState(false)
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const onLoginPress = async () => {
     try{
@@ -19,7 +22,7 @@ export default function LoginScreen() {
         throw new Error('Please fill in all fields')
       }
 
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: email,
         password: password,
       })
@@ -28,6 +31,14 @@ export default function LoginScreen() {
         throw new Error(error.message)
       }
 
+      dispatch(
+        setAuth({
+          user: data.user,
+          session: data.session,
+        })
+      );
+      
+      router.dismissAll()
       router.replace("/(admin)/home");
     }catch(error:any){
       console.log('[onLoginPress]',error)

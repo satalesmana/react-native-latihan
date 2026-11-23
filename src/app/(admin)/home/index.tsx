@@ -1,13 +1,13 @@
 import { CardDompet, LoadingUi } from '@/components';
 import { CARD_THEMES, DEFAULT_CARD_ACCENT, DEFAULT_CARD_THEME } from '@/constants/cardThemes';
-import { JwtPayload } from '@supabase/supabase-js';
+import { useAppSelector } from '@/store/hooks';
 import { useRouter } from "expo-router";
 import { useEffect, useState } from 'react';
 import { Button, ScrollView, Text, useWindowDimensions, View } from 'react-native';
 import { supabase } from '../../../../lib/supabase';
 
 export default function AdminHomeScreen() {
-    const [claims, setClaims] = useState<JwtPayload | null>(null)
+    const { user } = useAppSelector((state) => state.auth);
     const [loading, setLoading] = useState(false)
     const router = useRouter();
     const [dataDompet, setDataDompet] = useState<any[]>([])
@@ -16,14 +16,6 @@ export default function AdminHomeScreen() {
     const cardWidth = width * 0.85
 
     useEffect(() => {
-        supabase.auth.getClaims().then(({ data: { claims } }) => {
-            setClaims(claims)
-        })
-        supabase.auth.onAuthStateChange(() => {
-            supabase.auth.getClaims().then(({ data: { claims } }) => {
-                setClaims(claims)
-            })
-        })
         onLoadData()
     }, [])
 
@@ -69,7 +61,7 @@ export default function AdminHomeScreen() {
 
             <Button title="new dompet" onPress={()=> router.push('/(admin)/dompet')} />
 
-            {claims && <Text>{JSON.stringify(claims)}</Text>}    
+            {user && <Text className="p-4 text-xs text-gray-500">Logged in as: {user.email}</Text>}
         </View>
     );
 }
