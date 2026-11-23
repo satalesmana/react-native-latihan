@@ -59,7 +59,7 @@ export default function CardDompet({
             </View>
 
             {/* Saldo */}
-            <View className="mt-9">
+            <View className="mt-3">
                 <Text className="text-white/70 text-[11px] font-semibold tracking-[0.8px] mb-1">
                     SALDO TERSEDIA
                 </Text>
