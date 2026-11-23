@@ -38,7 +38,7 @@ export default function LoginScreen() {
         })
       );
       
-      router.dismissAll()
+      
       router.replace("/(admin)/home");
     }catch(error:any){
       console.log('[onLoginPress]',error)

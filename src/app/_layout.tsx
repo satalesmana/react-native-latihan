@@ -68,7 +68,6 @@ function RootNavigation() {
         name="(admin)/home/index"
         options={{
           title: "Home",
-          headerBackVisible: false,
           headerBackButtonMenuEnabled: false,
           headerRight: () => (
             <TouchableOpacity
